@@ -79,7 +79,6 @@ customElements.define('countdown-timer',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      debugger
       this._IntervalID = window.setInterval(() => {
         if (this._timeLeft === 0) {
           this.stopTimer()
