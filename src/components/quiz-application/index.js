@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+import '../quiz-question/'
+
 /**
  * Define template.
  */
@@ -63,6 +65,7 @@ customElements.define('quiz-application',
         .appendChild(template.content.cloneNode(true))
 
       this._startGameButton = this.shadowRoot.querySelector('#startGameButton')
+      this._countdownTimer = this.shadowRoot.querySelector('countdown-timer')
     }
 
     /**
@@ -71,6 +74,10 @@ customElements.define('quiz-application',
     connectedCallback () {
       this._startGameButton.addEventListener('click', () => {
         this.dispatchEvent(new window.CustomEvent('gameStart'))
+      })
+      this.addEventListener('hasLimit', event => {
+        console.log(event)
+        this._countdownTimer.setAttribute('limit', event.detail.limit)
       })
     }
   })

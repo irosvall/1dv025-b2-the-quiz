@@ -41,5 +41,36 @@ customElements.define('quiz-question',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+
+      /**
+       * The quiz application.
+       *
+       * @type {HTMLElement}
+       */
+      this.quizApplication = document.querySelector('quiz-application')
+    }
+
+    /**
+     * Called after the element is inserted into the DOM.
+     */
+    connectedCallback () {
+      this.quizApplication.addEventListener('gameStart', event => {
+        this._fetchQuestions(event)
+      })
+    }
+
+    /**
+     * Handles gameStart events.
+     *
+     * @param {Event} event - The input event.
+     */
+    async _fetchQuestions (event) {
+      let res = await window.fetch('http://courselab.lnu.se/question/1')
+      res = await res.json()
+      console.log(res)
+
+      if (res.limit) {
+        this.quizApplication.dispatchEvent(new window.CustomEvent('hasLimit', { detail: { limit: `${res.limit}` } }))
+      }
     }
   })
