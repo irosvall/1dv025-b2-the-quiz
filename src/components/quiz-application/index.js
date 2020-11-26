@@ -25,7 +25,7 @@ template.innerHTML = `
   </div>
   <div class="wrapper" id="questionWindow">
     <countdown-timer limit="50,5"></countdown-timer>
-    <h2 id="question"></h2>
+    <quiz-question></quiz-question>
   </div>
   <div class="wrapper" id="startWindow">
     <h2>Congratulations you completed the quiz!</h2>
