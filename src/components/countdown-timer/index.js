@@ -1,5 +1,5 @@
 /**
- * The wiki-search web component module.
+ * The countdown-timer web component module.
  *
  * @author Ida Rosvall <ir222gn@student.lnu.se>
  * @version 1.0.0
