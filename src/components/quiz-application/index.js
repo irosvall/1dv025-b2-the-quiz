@@ -61,5 +61,16 @@ customElements.define('quiz-application',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+
+      this._startGameButton = this.shadowRoot.querySelector('#startGameButton')
+    }
+
+    /**
+     * Called after the element is inserted into the DOM.
+     */
+    connectedCallback () {
+      this._startGameButton.addEventListener('click', () => {
+        this.dispatchEvent(new window.CustomEvent('gameStart'))
+      })
     }
   })
