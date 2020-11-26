@@ -24,7 +24,7 @@ template.innerHTML = `
     <button id="startGameButton" type="button">Start game</button>
   </div>
   <div class="wrapper" id="questionWindow">
-    <countdown-timer></countdown-timer>
+    <countdown-timer limit="50,5"></countdown-timer>
     <h2 id="question"></h2>
   </div>
   <div class="wrapper" id="startWindow">
@@ -35,5 +35,31 @@ template.innerHTML = `
   <div class="wrapper" id="gameOverWindow">
     <h2>Game Over</h2>
   </div>
-  <high-score></high-score>  
+  <div id="highScoreWindow">
+    <high-score></high-score>
+  </div>  
 `
+
+/**
+ * Define custom element.
+ */
+customElements.define('quiz-application',
+  /**
+   * Represents a quiz-application custom element.
+   *
+   * @class
+   */
+  class extends HTMLElement {
+    /**
+     * Creates an instance of a quiz-application custom element.
+     *
+     */
+    constructor () {
+      super()
+
+      // Attach a shadow DOM tree to this element and
+      // append the template to the shadow root.
+      this.attachShadow({ mode: 'open' })
+        .appendChild(template.content.cloneNode(true))
+    }
+  })

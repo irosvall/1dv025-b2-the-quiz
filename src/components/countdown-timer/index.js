@@ -33,9 +33,8 @@ customElements.define('countdown-timer',
     /**
      * Creates an instance of a countdown-timer custom element.
      *
-     * @param {number} timer - The time limit in seconds.
      */
-    constructor (timer = 20) {
+    constructor () {
       super()
 
       // Attach a shadow DOM tree to this element and
@@ -47,18 +46,18 @@ customElements.define('countdown-timer',
       this._timeElement = this.shadowRoot.querySelector('time')
 
       /**
-       * The timer in seconds.
+       * The timer's limit in seconds.
        *
        * @type {number}
        */
-      this.timer = timer
+      this.limit = 20
 
       /**
        * The time left on the timer.
        *
        * @type {number}
        */
-      this._timeLeft = this.timer
+      this._timeLeft = this.limit
 
       /**
        * The total time a game session has taken.
@@ -73,6 +72,15 @@ customElements.define('countdown-timer',
        * @type {number}
        */
       this._IntervalID = null
+    }
+
+    /**
+     * Attributes to monitor for changes.
+     *
+     * @returns {string[]} A string array of attributes to monitor.
+     */
+    static get observedAttributes () {
+      return ['limit']
     }
 
     /**
@@ -91,6 +99,24 @@ customElements.define('countdown-timer',
     }
 
     /**
+     * Called when observed attribute(s) changes.
+     *
+     * @param {string} name - The attribute's name.
+     * @param {*} oldValue - The old value.
+     * @param {*} newValue - The new value.
+     */
+    attributeChangedCallback (name, oldValue, newValue) {
+      // Change the first comma to a dot.
+      newValue = newValue.replace(',', '.')
+      // Parse newValue to a number and round it to nearest integer.
+      newValue = Math.round(Number(newValue))
+      if (Number.isInteger(newValue)) {
+        this.limit = newValue
+        this._timeLeft = this.limit
+      }
+    }
+
+    /**
      * Stops the timer.
      */
     stopTimer () {
@@ -102,6 +128,6 @@ customElements.define('countdown-timer',
      * Add time to the total time that's taken during game session.
      */
     _addTime () {
-      this._totalTime += (this.timer - this._timeLeft)
+      this._totalTime += (this.limit - this._timeLeft)
     }
   })
