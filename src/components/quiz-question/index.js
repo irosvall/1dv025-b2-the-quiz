@@ -92,6 +92,20 @@ customElements.define('quiz-question',
        * @type {HTMLElement}
        */
       this._radioButtons = this.shadowRoot.querySelector('#radioButtons')
+
+      /**
+       * The URL to fetch the answer.
+       *
+       * @type {string}
+       */
+      this._answerURL = ''
+
+      /**
+       * The URL to fetch the question.
+       *
+       * @type {string}
+       */
+      this._questionURL = ''
     }
 
     /**
@@ -101,17 +115,34 @@ customElements.define('quiz-question',
       this.quizApplication.addEventListener('gameStart', event => {
         this._fetchQuestions(event)
       })
+      this._radioAnswerForm.addEventListener('submit', event => {
+        this._getRadioButtonAnswer(event)
+      })
     }
 
     /**
-     * Handles gameStart events.
+     * Called after the element has been removed from the DOM.
+     */
+    disconnectedCallback () {
+      this.quizApplication.removeEventListener('gameStart', event => {
+        this._fetchQuestions(event)
+      })
+      this._radioAnswerForm.removeEventListener('submit', event => {
+        this._getRadioButtonAnswer(event)
+      })
+    }
+
+    /**
+     * Handles gameStart events. Fetches the questions.
      *
-     * @param {Event} event - The input event.
+     * @param {Event} event - The gameStart event.
      */
     async _fetchQuestions (event) {
-      let res = await window.fetch('http://courselab.lnu.se/question/1')
+      let res = await window.fetch('http://courselab.lnu.se/question/21')
       res = await res.json()
       console.log(res)
+
+      this._answerURL = res.nextURL
 
       if (res.alternatives) {
         this._renderRadioAnswerForm(res.alternatives)
@@ -144,5 +175,41 @@ customElements.define('quiz-question',
       }
       this._radioButtons.appendChild(fragment)
       this._radioAnswerForm.classList.remove('hidden')
+    }
+
+    /**
+     * Handles submit events for answered radio button questions.
+     *
+     * @param {Event} event - The submit event.
+     */
+    _getRadioButtonAnswer (event) {
+      event.preventDefault()
+      console.log(event)
+      for (const prop in event.path[0]) {
+        if (event.path[0][prop].checked) {
+          this._fetchAnswer(event, event.path[0][prop].id)
+          console.log(event.path[0][prop].id)
+          break
+        }
+      }
+    }
+
+    /**
+     * Handles submit events for answered questions. Fetches the answers.
+     *
+     * @param {Event} event - The submit event.
+     * @param {string} answer - The answer.
+     */
+    async _fetchAnswer (event, answer) {
+      const jsonAnswer = JSON.stringify({ answer: `${answer}` })
+      let res = await window.fetch(`${this._answerURL}`, {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: `${jsonAnswer}`
+      })
+      res = await res.json()
+      console.log(res)
     }
   })

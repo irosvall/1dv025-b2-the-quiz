@@ -24,7 +24,7 @@ template.innerHTML = `
     <button id="startGameButton" type="button">Start game</button>
   </div>
   <div class="wrapper" id="questionWindow">
-    <countdown-timer limit="50,5"></countdown-timer>
+    <countdown-timer></countdown-timer>
     <quiz-question></quiz-question>
   </div>
   <div class="wrapper" id="startWindow">
