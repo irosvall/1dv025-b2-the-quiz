@@ -21,6 +21,9 @@ template.innerHTML = `
       display: block;
       padding: 0.5em;
     }
+    #textInput, #submitTextAnswer {
+      display: inline-block;
+    }
   </style>
 
   <h2 id="question"></h2>
@@ -106,12 +109,14 @@ customElements.define('quiz-question',
      * @param {Event} event - The input event.
      */
     async _fetchQuestions (event) {
-      let res = await window.fetch('http://courselab.lnu.se/question/21')
+      let res = await window.fetch('http://courselab.lnu.se/question/1')
       res = await res.json()
       console.log(res)
 
       if (res.alternatives) {
         this._renderRadioAnswerForm(res.alternatives)
+      } else {
+        this._textAnswerForm.classList.remove('hidden')
       }
 
       if (res.limit) {
