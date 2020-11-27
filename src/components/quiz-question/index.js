@@ -118,6 +118,9 @@ customElements.define('quiz-question',
       this._radioAnswerForm.addEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
       })
+      this.addEventListener('rightAnswer', event => {
+        this._fetchQuestions(event)
+      })
     }
 
     /**
@@ -129,6 +132,9 @@ customElements.define('quiz-question',
       })
       this._radioAnswerForm.removeEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
+      })
+      this.addEventListener('rightAnswer', event => {
+        this._fetchQuestions(event)
       })
     }
 
@@ -151,7 +157,7 @@ customElements.define('quiz-question',
       }
 
       if (res.limit) {
-        this.quizApplication.dispatchEvent(new window.CustomEvent('hasLimit', { detail: { limit: `${res.limit}` } }))
+        this.dispatchEvent(new window.CustomEvent('hasLimit', { detail: { limit: `${res.limit}` } }))
       }
     }
 
@@ -184,11 +190,9 @@ customElements.define('quiz-question',
      */
     _getRadioButtonAnswer (event) {
       event.preventDefault()
-      console.log(event)
       for (const prop in event.path[0]) {
         if (event.path[0][prop].checked) {
           this._fetchAnswer(event, event.path[0][prop].id)
-          console.log(event.path[0][prop].id)
           break
         }
       }
@@ -209,7 +213,13 @@ customElements.define('quiz-question',
         },
         body: `${jsonAnswer}`
       })
-      res = await res.json()
-      console.log(res)
+
+      if (res.status === 400) {
+        this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
+      } else if (res.status === 200) {
+        res = await res.json()
+        this._questionURL = res.nextURL
+        this.dispatchEvent(new window.CustomEvent('rightAnswer'))
+      }
     }
   })

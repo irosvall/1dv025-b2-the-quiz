@@ -64,6 +64,7 @@ customElements.define('quiz-application',
 
       this._startGameButton = this.shadowRoot.querySelector('#startGameButton')
       this._countdownTimer = this.shadowRoot.querySelector('countdown-timer')
+      this._quizQuestion = this.shadowRoot.querySelector('quiz-question')
     }
 
     /**
@@ -73,8 +74,22 @@ customElements.define('quiz-application',
       this._startGameButton.addEventListener('click', () => {
         this.dispatchEvent(new window.CustomEvent('gameStart'))
       })
-      this.addEventListener('hasLimit', event => {
-        console.log(event)
+      this._quizQuestion.addEventListener('hasLimit', event => {
+        this._countdownTimer.setAttribute('limit', event.detail.limit)
+      })
+      this._quizQuestion.addEventListener('wrongAnswer', event => {
+        console.log('game over')
+      })
+    }
+
+    /**
+     * Called after the element has been removed from the DOM.
+     */
+    disconnectedCallback () {
+      this._startGameButton.addEventListener('click', () => {
+        this.dispatchEvent(new window.CustomEvent('gameStart'))
+      })
+      this._quizQuestion.addEventListener('hasLimit', event => {
         this._countdownTimer.setAttribute('limit', event.detail.limit)
       })
     }
