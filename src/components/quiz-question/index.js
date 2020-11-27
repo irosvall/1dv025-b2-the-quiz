@@ -13,11 +13,29 @@ template.innerHTML = `
   <style>
     :host {
       display: block;
-      background-color: white;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 
-  <h2 id="question"></h2> 
+  <h2 id="question"></h2>
+  <form id="Searchform">
+    <div id="textAnswerMethod" class="hidden">
+      <div id="textAnswer">
+          <input type="text" placeholder="Answer..">
+      </div>
+      <div id="submitTextAnswer">
+          <input type="submit" value="Submit">
+      </div>
+    </div>
+    <div id="radioAnswerMethod" class="hidden">
+      <div id="radioAnswer"></div>
+      <div id="submitRadioAnswer">
+          <input type="submit" value="Submit">
+      </div>
+    </div>
+  </form>
 `
 
 /**
@@ -65,7 +83,7 @@ customElements.define('quiz-question',
      * @param {Event} event - The input event.
      */
     async _fetchQuestions (event) {
-      let res = await window.fetch('http://courselab.lnu.se/question/1')
+      let res = await window.fetch('http://courselab.lnu.se/question/21')
       res = await res.json()
       console.log(res)
 

@@ -5,8 +5,6 @@
  * @version 1.0.0
  */
 
-import '../quiz-question/'
-
 /**
  * Define template.
  */
