@@ -29,7 +29,7 @@ template.innerHTML = `
   <h2 id="question"></h2>
   <form id="textAnswerForm" class="hidden">
     <div id="textInput">
-      <input type="text" placeholder="Answer..">
+      <input type="text" placeholder="Answer.." autocomplete="off">
     </div>
     <div id="submitTextAnswer">
       <input type="submit" value="Submit">
@@ -73,11 +73,25 @@ customElements.define('quiz-question',
       this.quizApplication = document.querySelector('quiz-application')
 
       /**
+       * The h2 element for the question to be displayed in.
+       *
+       * @type {HTMLElement}
+       */
+      this._question = this.shadowRoot.querySelector('#question')
+
+      /**
        * The form element for the text answer type of questions.
        *
        * @type {HTMLElement}
        */
       this._textAnswerForm = this.shadowRoot.querySelector('#textAnswerForm')
+
+      /**
+       * The input element for the text answer type of questions.
+       *
+       * @type {HTMLElement}
+       */
+      this._textAnswerinput = this.shadowRoot.querySelector('#textAnswerForm input')
 
       /**
        * The form element for the radio answer type of questions.
@@ -105,7 +119,7 @@ customElements.define('quiz-question',
        *
        * @type {string}
        */
-      this._questionURL = ''
+      this._questionURL = 'http://courselab.lnu.se/question/1'
     }
 
     /**
@@ -117,6 +131,10 @@ customElements.define('quiz-question',
       })
       this._radioAnswerForm.addEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
+      })
+      this._textAnswerForm.addEventListener('submit', event => {
+        event.preventDefault()
+        this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
       })
       this.addEventListener('rightAnswer', event => {
         this._fetchQuestions(event)
@@ -133,6 +151,10 @@ customElements.define('quiz-question',
       this._radioAnswerForm.removeEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
       })
+      this._textAnswerForm.addEventListener('submit', event => {
+        event.preventDefault()
+        this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
+      })
       this.addEventListener('rightAnswer', event => {
         this._fetchQuestions(event)
       })
@@ -144,16 +166,22 @@ customElements.define('quiz-question',
      * @param {Event} event - The gameStart event.
      */
     async _fetchQuestions (event) {
-      let res = await window.fetch('http://courselab.lnu.se/question/21')
+      this._radioAnswerForm.classList.add('hidden')
+      this._textAnswerForm.classList.add('hidden')
+
+      let res = await window.fetch(`${this._questionURL}`)
       res = await res.json()
       console.log(res)
 
       this._answerURL = res.nextURL
+      this._question.textContent = `${res.question}`
 
       if (res.alternatives) {
         this._renderRadioAnswerForm(res.alternatives)
       } else {
+        this._textAnswerinput.value = ''
         this._textAnswerForm.classList.remove('hidden')
+        this._textAnswerinput.focus()
       }
 
       if (res.limit) {
@@ -167,6 +195,7 @@ customElements.define('quiz-question',
      * @param {object} alternatives - The answer options.
      */
     _renderRadioAnswerForm (alternatives) {
+      this._radioButtons.innerHTML = ''
       const fragment = document.createDocumentFragment()
 
       for (const alt in alternatives) {
