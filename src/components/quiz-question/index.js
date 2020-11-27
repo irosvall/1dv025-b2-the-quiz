@@ -171,7 +171,6 @@ customElements.define('quiz-question',
 
       let res = await window.fetch(`${this._questionURL}`)
       res = await res.json()
-      console.log(res)
 
       this._answerURL = res.nextURL
       this._question.textContent = `${res.question}`
@@ -244,6 +243,8 @@ customElements.define('quiz-question',
       })
 
       if (res.status === 400) {
+        this._questionURL = 'http://courselab.lnu.se/question/1'
+        this._answerURL = ''
         this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
       } else if (res.status === 200) {
         res = await res.json()

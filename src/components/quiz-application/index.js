@@ -85,7 +85,7 @@ customElements.define('quiz-application',
         this._countdownTimer.setAttribute('limit', event.detail.limit)
       })
       this._quizQuestion.addEventListener('wrongAnswer', event => {
-        console.log('game over')
+        this._gameOver()
       })
     }
 
@@ -108,5 +108,17 @@ customElements.define('quiz-application',
       this._startWindow.classList.add('hidden')
       this._questionWindow.classList.remove('hidden')
       this.dispatchEvent(new window.CustomEvent('gameStart'))
+    }
+
+    /**
+     * Handles events for when the user fails the quiz.
+     */
+    _gameOver () {
+      this._questionWindow.classList.add('hidden')
+      this._gameOverWindow.classList.remove('hidden')
+      window.setTimeout(() => {
+        this._gameOverWindow.classList.add('hidden')
+        this._startWindow.classList.remove('hidden')
+      }, 2000)
     }
   })
