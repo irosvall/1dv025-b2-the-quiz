@@ -15,6 +15,9 @@ template.innerHTML = `
       display: block;
       background-color: white;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 
   <div class="wrapper" id="startWindow">
@@ -23,16 +26,16 @@ template.innerHTML = `
     <nickname-form></nickname-form>
     <button id="startGameButton" type="button">Start game</button>
   </div>
-  <div class="wrapper" id="questionWindow">
+  <div class="wrapper hidden" id="questionWindow">
     <countdown-timer></countdown-timer>
     <quiz-question></quiz-question>
   </div>
-  <div class="wrapper" id="startWindow">
+  <div class="wrapper hidden" id="CongratzWindow">
     <h2>Congratulations you completed the quiz!</h2>
     <p>Time/Score: </p>
     <button id="playAgainButton" type="button">Play again</button>
   </div>
-  <div class="wrapper" id="gameOverWindow">
+  <div class="wrapper hidden" id="gameOverWindow">
     <h2>Game Over</h2>
   </div>
   <div id="highScoreWindow">
@@ -65,6 +68,10 @@ customElements.define('quiz-application',
       this._startGameButton = this.shadowRoot.querySelector('#startGameButton')
       this._countdownTimer = this.shadowRoot.querySelector('countdown-timer')
       this._quizQuestion = this.shadowRoot.querySelector('quiz-question')
+      this._startWindow = this.shadowRoot.querySelector('#startWindow')
+      this._questionWindow = this.shadowRoot.querySelector('#questionWindow')
+      this._CongratzWindow = this.shadowRoot.querySelector('#CongratzWindow')
+      this._gameOverWindow = this.shadowRoot.querySelector('#gameOverWindow')
     }
 
     /**
@@ -72,7 +79,7 @@ customElements.define('quiz-application',
      */
     connectedCallback () {
       this._startGameButton.addEventListener('click', () => {
-        this.dispatchEvent(new window.CustomEvent('gameStart'))
+        this._startGame()
       })
       this._quizQuestion.addEventListener('hasLimit', event => {
         this._countdownTimer.setAttribute('limit', event.detail.limit)
@@ -92,5 +99,14 @@ customElements.define('quiz-application',
       this._quizQuestion.addEventListener('hasLimit', event => {
         this._countdownTimer.setAttribute('limit', event.detail.limit)
       })
+    }
+
+    /**
+     * Handles submit events for starting the game.
+     */
+    _startGame () {
+      this._startWindow.classList.add('hidden')
+      this._questionWindow.classList.remove('hidden')
+      this.dispatchEvent(new window.CustomEvent('gameStart'))
     }
   })
