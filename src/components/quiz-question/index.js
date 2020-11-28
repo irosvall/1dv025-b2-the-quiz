@@ -151,11 +151,11 @@ customElements.define('quiz-question',
       this._radioAnswerForm.removeEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
       })
-      this._textAnswerForm.addEventListener('submit', event => {
+      this._textAnswerForm.removeEventListener('submit', event => {
         event.preventDefault()
         this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
       })
-      this.addEventListener('rightAnswer', event => {
+      this.removeEventListener('rightAnswer', event => {
         this._fetchQuestions(event)
       })
     }
@@ -171,6 +171,7 @@ customElements.define('quiz-question',
 
       let res = await window.fetch(`${this._questionURL}`)
       res = await res.json()
+      console.log(res)
 
       this._answerURL = res.nextURL
       this._question.textContent = `${res.question}`
@@ -182,6 +183,8 @@ customElements.define('quiz-question',
         this._textAnswerForm.classList.remove('hidden')
         this._textAnswerinput.focus()
       }
+
+      this.dispatchEvent(new window.CustomEvent('loadedQuestion'))
 
       if (res.limit) {
         this.dispatchEvent(new window.CustomEvent('hasLimit', { detail: { limit: `${res.limit}` } }))

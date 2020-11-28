@@ -12,9 +12,11 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      background-color: blue;
+      background-color: lightblue;
       display: inline-block;
-      font-size: 1.2em;
+      font-size: 1.5em;
+      font-weight: 1000;
+      padding: 0.5em 1.4em;
     }
   </style>
 
@@ -84,21 +86,6 @@ customElements.define('countdown-timer',
     }
 
     /**
-     * Called after the element is inserted into the DOM.
-     */
-    connectedCallback () {
-      this._IntervalID = window.setInterval(() => {
-        if (this._timeLeft === 0) {
-          this.stopTimer()
-          this.dispatchEvent(new window.CustomEvent('timeout'))
-          return
-        }
-        this._timeElement.textContent = this._timeLeft
-        this._timeLeft -= 1
-      }, 1000)
-    }
-
-    /**
      * Called when observed attribute(s) changes.
      *
      * @param {string} name - The attribute's name.
@@ -117,11 +104,33 @@ customElements.define('countdown-timer',
     }
 
     /**
+     * Starts the timer.
+     */
+    startTimer () {
+      // To give a set limit the chance to be present a timeout is set.
+      window.setTimeout(() => {
+        this._timeElement.textContent = this._timeLeft
+      }, 0)
+      this._IntervalID = window.setInterval(() => {
+        this._timeLeft -= 1
+        this._timeElement.textContent = this._timeLeft
+        if (this._timeLeft === 0) {
+          this.stopTimer()
+          this.dispatchEvent(new window.CustomEvent('timeout'))
+        }
+      }, 1000)
+    }
+
+    /**
      * Stops the timer.
      */
     stopTimer () {
       clearInterval(this._IntervalID)
       this._addTime()
+
+      // Resets the default values
+      this.limit = 20
+      this._timeLeft = 20
     }
 
     /**
