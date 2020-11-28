@@ -11,12 +11,27 @@
 const template = document.createElement('template')
 template.innerHTML = `
   <style>
-    :host {
-      display: block;
+    :host {  
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: 4em;
+      margin: 2em;
+    }
+    .wrapper {
       background-color: white;
+      padding: 2em;
+      height: 70vh;
+      max-height: 100%;
+      border: solid 2px grey;
+      border-radius: 10px;
     }
     .hidden {
       display: none;
+    }
+    #gameOverWindow {
+      background-color: red;
+      transform: background-color;
+      transition: 1s;
     }
   </style>
 
@@ -38,7 +53,7 @@ template.innerHTML = `
   <div class="wrapper hidden" id="gameOverWindow">
     <h2>Game Over</h2>
   </div>
-  <div id="highScoreWindow">
+  <div class="wrapper" id="highScoreWindow">
     <high-score></high-score>
   </div>  
 `
