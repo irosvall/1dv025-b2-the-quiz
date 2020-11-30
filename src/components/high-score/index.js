@@ -19,11 +19,13 @@ template.innerHTML = `
 
   <h2>High Score</h2>
   <table>
-    <tr>
-      <th>Name</th>
-      <th>Score</th>
-    </tr>
-    <tr id="score"></tr>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
   </table> 
 `
 
@@ -49,8 +51,8 @@ customElements.define('high-score',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      // Get the table element from the shadow root.
-      this._table = this.shadowRoot.querySelector('table')
+      // Get the tbody element from the shadow root.
+      this._tbody = this.shadowRoot.querySelector('tbody')
 
       /**
        * The highscores presented as objects in an array.
@@ -58,6 +60,16 @@ customElements.define('high-score',
        * @type {{name: string, score: number}[]} An array of highscore objects.
        */
       this._highScores = []
+    }
+
+    /**
+     * Called after the element is inserted into the DOM.
+     */
+    connectedCallback () {
+      if (window.localStorage.getItem('quiz-highscore')) {
+        this._highScores = JSON.parse(window.localStorage.getItem('quiz-highscore'))
+        this.updateHighScores()
+      }
     }
 
     /**
@@ -69,7 +81,7 @@ customElements.define('high-score',
       if (typeof value === 'object') {
         if (this._highScores.length === 0) {
           this._highScores.push(value)
-          this.updateLocalWebbStorage()
+          this.updateHighScores()
           return
         }
         for (const [index, highscore] of this._highScores.entries()) {
@@ -78,7 +90,7 @@ customElements.define('high-score',
             if (this._highScores.length === 6) {
               this._highScores.splice(5, 1)
             }
-            this.updateLocalWebbStorage()
+            this.updateHighScores()
             break
           }
         }
@@ -86,13 +98,30 @@ customElements.define('high-score',
     }
 
     /**
-     * Updates the local Webb Storage.
+     * Updates the local Webb Storage and the rendering.
      */
-    updateLocalWebbStorage () {
+    updateHighScores () {
       window.localStorage.setItem('quiz-highscore', JSON.stringify(this._highScores))
+      this._renderHighScores()
     }
 
+    /**
+     * Renders the high scores into tr elements.
+     */
     _renderHighScores () {
-      
+      this._tbody.textContent = ''
+
+      const fragment = document.createDocumentFragment()
+      for (const highscore of this._highScores) {
+        const tr = document.createElement('tr')
+        const name = document.createElement('td')
+        name.textContent = `${highscore.name}`
+        const score = document.createElement('td')
+        score.textContent = `${highscore.score}`
+        tr.appendChild(name)
+        tr.appendChild(score)
+        fragment.appendChild(tr)
+      }
+      this._tbody.appendChild(fragment)
     }
   })

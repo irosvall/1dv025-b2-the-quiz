@@ -170,7 +170,6 @@ customElements.define('quiz-question',
 
       let res = await window.fetch(`${this._questionURL}`)
       res = await res.json()
-      console.log(res)
 
       this._answerURL = res.nextURL
       this._question.textContent = `${res.question}`
