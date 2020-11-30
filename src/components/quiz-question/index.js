@@ -263,7 +263,6 @@ customElements.define('quiz-question',
      */
     async _checkHTTPstatus (res) {
       if (res.status === 400) {
-        this._resetURLs()
         this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
       } else if (res.status === 200) {
         res = await res.json()
@@ -272,7 +271,6 @@ customElements.define('quiz-question',
         this.dispatchEvent(new window.CustomEvent('rightAnswer'))
         // Needs to be changed!
       } else if (res.status === 500) {
-        this._resetURLs()
         this.dispatchEvent(new window.CustomEvent('gameWin'))
       }
     }
@@ -292,7 +290,7 @@ customElements.define('quiz-question',
     /**
      * Resets the URL's to their default values.
      */
-    _resetURLs () {
+    resetQuestions () {
       this._questionURL = 'http://courselab.lnu.se/question/1'
       this._answerURL = ''
     }

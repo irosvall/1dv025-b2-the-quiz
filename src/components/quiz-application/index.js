@@ -5,6 +5,10 @@
  * @version 1.0.0
  */
 
+import '../high-score/'
+import '../quiz-question/'
+import '../countdown-timer/'
+
 /**
  * Define template.
  */
@@ -95,6 +99,7 @@ customElements.define('quiz-application',
       this._CongratzWindow = this.shadowRoot.querySelector('#CongratzWindow')
       this._gameOverWindow = this.shadowRoot.querySelector('#gameOverWindow')
       this._nicknameInput = this.shadowRoot.querySelector('#nicknameInput')
+      this._highScore = this.shadowRoot.querySelector('high-score')
 
       /**
        * The player's nickname.
@@ -163,6 +168,13 @@ customElements.define('quiz-application',
     _startGame (event, nickname) {
       event.preventDefault()
       this._nickname = nickname
+
+      // Makes the quiz always start at the first question.
+      this._quizQuestion.resetQuestions()
+
+      // Resets the time/score
+      this._countdownTimer.resetTotalTime()
+
       this._startWindow.classList.add('hidden')
       this._questionWindow.classList.remove('hidden')
       this.dispatchEvent(new window.CustomEvent('gameStart'))
@@ -187,8 +199,8 @@ customElements.define('quiz-application',
     _gameWin () {
       this._countdownTimer.stopTimer()
       const totalTime = this._countdownTimer.totalTime
+      this._highScore.highScore = { name: this._nickname, score: totalTime }
       this.shadowRoot.querySelector('#CongratzWindow p').textContent = `Time/Score: ${totalTime}s`
-      this._countdownTimer.resetTotalTime()
       this._questionWindow.classList.add('hidden')
       this._CongratzWindow.classList.remove('hidden')
     }

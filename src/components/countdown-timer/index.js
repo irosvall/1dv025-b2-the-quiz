@@ -44,7 +44,7 @@ customElements.define('countdown-timer',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      // Get the time element in the shadow root.
+      // Get the time element from the shadow root.
       this._timeElement = this.shadowRoot.querySelector('time')
 
       /**
