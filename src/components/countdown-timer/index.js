@@ -77,6 +77,15 @@ customElements.define('countdown-timer',
     }
 
     /**
+     * Get a player's total time.
+     *
+     * @returns {number} The total time.
+     */
+    get totalTime () {
+      return this._totalTime
+    }
+
+    /**
      * Attributes to monitor for changes.
      *
      * @returns {string[]} A string array of attributes to monitor.
@@ -127,8 +136,20 @@ customElements.define('countdown-timer',
     stopTimer () {
       clearInterval(this._IntervalID)
       this._addTime()
+      this._resetTimer()
+    }
 
-      // Resets the default values
+    /**
+     * Resets the total time value.
+     */
+    resetTotalTime () {
+      this._totalTime = 0
+    }
+
+    /**
+     * Resets the timer values to default.
+     */
+    _resetTimer () {
       this.limit = 20
       this._timeLeft = 20
     }

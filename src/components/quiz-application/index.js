@@ -53,7 +53,7 @@ template.innerHTML = `
   </div>
   <div class="wrapper hidden" id="CongratzWindow">
     <h2>Congratulations you completed the quiz!</h2>
-    <p>Time/Score: </p>
+    <p></p>
     <button id="playAgainButton" type="button">Play again</button>
   </div>
   <div class="wrapper hidden" id="gameOverWindow">
@@ -87,6 +87,7 @@ customElements.define('quiz-application',
         .appendChild(template.content.cloneNode(true))
 
       this._startGameForm = this.shadowRoot.querySelector('#startGameForm')
+      this._playAgainButton = this.shadowRoot.querySelector('#playAgainButton')
       this._countdownTimer = this.shadowRoot.querySelector('countdown-timer')
       this._quizQuestion = this.shadowRoot.querySelector('quiz-question')
       this._startWindow = this.shadowRoot.querySelector('#startWindow')
@@ -122,6 +123,12 @@ customElements.define('quiz-application',
       this._quizQuestion.addEventListener('loadedQuestion', event => {
         this._countdownTimer.stopTimer()
         this._countdownTimer.startTimer()
+      })
+      this._quizQuestion.addEventListener('gameWin', event => {
+        this._gameWin()
+      })
+      this._playAgainButton.addEventListener('click', event => {
+        this._startOver()
       })
     }
 
@@ -172,5 +179,25 @@ customElements.define('quiz-application',
         this._gameOverWindow.classList.add('hidden')
         this._startWindow.classList.remove('hidden')
       }, 2000)
+    }
+
+    /**
+     * Handles events for when the user finnishes the quiz.
+     */
+    _gameWin () {
+      this._countdownTimer.stopTimer()
+      const totalTime = this._countdownTimer.totalTime
+      this.shadowRoot.querySelector('#CongratzWindow p').textContent = `Time/Score: ${totalTime}s`
+      this._countdownTimer.resetTotalTime()
+      this._questionWindow.classList.add('hidden')
+      this._CongratzWindow.classList.remove('hidden')
+    }
+
+    /**
+     * Handles events for when the user clicks the play again button.
+     */
+    _startOver () {
+      this._CongratzWindow.classList.add('hidden')
+      this._startWindow.classList.remove('hidden')
     }
   })

@@ -273,7 +273,7 @@ customElements.define('quiz-question',
         // Needs to be changed!
       } else if (res.status === 500) {
         this._resetURLs()
-        this.dispatchEvent(new window.CustomEvent('GameWin'))
+        this.dispatchEvent(new window.CustomEvent('gameWin'))
       }
     }
 
