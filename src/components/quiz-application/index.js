@@ -29,17 +29,23 @@ template.innerHTML = `
       display: none;
     }
     #gameOverWindow {
+      transition: background-color 2s ease;
       background-color: red;
-      transform: background-color;
-      transition: 1s;
     }
   </style>
 
   <div class="wrapper" id="startWindow">
     <h2>Instruction</h2>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat totam sed distinctio? Officia reiciendis repellat necessitatibus animi ipsa in natus, harum ex optio cumque, expedita corporis quia accusamus perspiciatis facilis?</p>
-    <nickname-form></nickname-form>
-    <button id="startGameButton" type="button">Start game</button>
+    <form id="startGameForm">
+      <div id="nicknameDiv">
+        <label for="nicknameInput">Nickname</label>
+        <input id="nicknameInput" type="text" placeholder="Anonymous" autocomplete="off">
+      </div>
+      <div id="startGameButton">
+        <input type="submit" value="Start game">
+      </div>
+    </form>
   </div>
   <div class="wrapper hidden" id="questionWindow">
     <countdown-timer></countdown-timer>
@@ -80,21 +86,29 @@ customElements.define('quiz-application',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      this._startGameButton = this.shadowRoot.querySelector('#startGameButton')
+      this._startGameForm = this.shadowRoot.querySelector('#startGameForm')
       this._countdownTimer = this.shadowRoot.querySelector('countdown-timer')
       this._quizQuestion = this.shadowRoot.querySelector('quiz-question')
       this._startWindow = this.shadowRoot.querySelector('#startWindow')
       this._questionWindow = this.shadowRoot.querySelector('#questionWindow')
       this._CongratzWindow = this.shadowRoot.querySelector('#CongratzWindow')
       this._gameOverWindow = this.shadowRoot.querySelector('#gameOverWindow')
+      this._nicknameInput = this.shadowRoot.querySelector('#nicknameInput')
+
+      /**
+       * The player's nickname.
+       *
+       * @type {string}
+       */
+      this._nickname = 'Anonymous'
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      this._startGameButton.addEventListener('click', () => {
-        this._startGame()
+      this._startGameForm.addEventListener('submit', (event) => {
+        this._startGame(event, this._nicknameInput.value)
       })
       this._quizQuestion.addEventListener('hasLimit', event => {
         this._countdownTimer.setAttribute('limit', event.detail.limit)
@@ -115,8 +129,8 @@ customElements.define('quiz-application',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this._startGameButton.removeEventListener('click', () => {
-        this._startGame()
+      this._startGameForm.removeEventListener('click', (event) => {
+        this._startGame(event)
       })
       this._quizQuestion.removeEventListener('hasLimit', event => {
         this._countdownTimer.setAttribute('limit', event.detail.limit)
@@ -135,8 +149,13 @@ customElements.define('quiz-application',
 
     /**
      * Handles submit events for starting the game.
+     *
+     * @param {Event} event - The submit event.
+     * @param {string} nickname - The user's nickname.
      */
-    _startGame () {
+    _startGame (event, nickname) {
+      event.preventDefault()
+      this._nickname = nickname
       this._startWindow.classList.add('hidden')
       this._questionWindow.classList.remove('hidden')
       this.dispatchEvent(new window.CustomEvent('gameStart'))
