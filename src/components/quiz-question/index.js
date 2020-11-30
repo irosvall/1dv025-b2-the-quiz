@@ -166,8 +166,7 @@ customElements.define('quiz-question',
      * @param {Event} event - The gameStart event.
      */
     async _fetchQuestions (event) {
-      this._radioAnswerForm.classList.add('hidden')
-      this._textAnswerForm.classList.add('hidden')
+      this._hidePreviousQuestion()
 
       let res = await window.fetch(`${this._questionURL}`)
       res = await res.json()
@@ -179,9 +178,7 @@ customElements.define('quiz-question',
       if (res.alternatives) {
         this._renderRadioAnswerForm(res.alternatives)
       } else {
-        this._textAnswerinput.value = ''
-        this._textAnswerForm.classList.remove('hidden')
-        this._textAnswerinput.focus()
+        this._rendertextAnswerForm()
       }
 
       this.dispatchEvent(new window.CustomEvent('loadedQuestion'))
@@ -192,7 +189,7 @@ customElements.define('quiz-question',
     }
 
     /**
-     * Render answer option for radio buttons.
+     * Render the answer option for radio buttons.
      *
      * @param {object} alternatives - The answer options.
      */
@@ -221,12 +218,23 @@ customElements.define('quiz-question',
      */
     _getRadioButtonAnswer (event) {
       event.preventDefault()
+
+      // Iterates through the properties of the event till the checked answer is found and sends it's value to get the question.
       for (const prop in event.path[0]) {
         if (event.path[0][prop].checked) {
           this._fetchAnswer(event, event.path[0][prop].id)
           break
         }
       }
+    }
+
+    /**
+     * Render the answer option for a text field.
+     */
+    _rendertextAnswerForm () {
+      this._textAnswerinput.value = ''
+      this._textAnswerForm.classList.remove('hidden')
+      this._textAnswerinput.focus()
     }
 
     /**
@@ -237,7 +245,7 @@ customElements.define('quiz-question',
      */
     async _fetchAnswer (event, answer) {
       const jsonAnswer = JSON.stringify({ answer: `${answer}` })
-      let res = await window.fetch(`${this._answerURL}`, {
+      const res = await window.fetch(`${this._answerURL}`, {
         method: 'post',
         headers: {
           'Content-type': 'application/json'
@@ -245,14 +253,47 @@ customElements.define('quiz-question',
         body: `${jsonAnswer}`
       })
 
+      this._checkHTTPstatus(res)
+    }
+
+    /**
+     * Check the HTTP Response status to see the user's preogress through the game.
+     *
+     * @param {JSON} res - The HTTP Response.
+     */
+    async _checkHTTPstatus (res) {
       if (res.status === 400) {
-        this._questionURL = 'http://courselab.lnu.se/question/1'
-        this._answerURL = ''
+        this._resetURLs()
         this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
       } else if (res.status === 200) {
         res = await res.json()
+        // Finds the new question.
         this._questionURL = res.nextURL
         this.dispatchEvent(new window.CustomEvent('rightAnswer'))
+        // Needs to be changed!
+      } else if (res.status === 500) {
+        this._resetURLs()
+        this.dispatchEvent(new window.CustomEvent('GameWin'))
       }
+    }
+
+    /**
+     * Hides the previous question by setting the class hidden on it.
+     */
+    _hidePreviousQuestion () {
+      if (!this._radioAnswerForm.classList.contains('hidden')) {
+        this._radioAnswerForm.classList.add('hidden')
+      }
+      if (!this._textAnswerForm.classList.contains('hidden')) {
+        this._textAnswerForm.classList.add('hidden')
+      }
+    }
+
+    /**
+     * Resets the URL's to their default values.
+     */
+    _resetURLs () {
+      this._questionURL = 'http://courselab.lnu.se/question/1'
+      this._answerURL = ''
     }
   })
