@@ -285,7 +285,6 @@ customElements.define('quiz-application',
       this._startWindow.classList.add('hidden')
       this._questionWindow.classList.remove('hidden')
       this._quizQuestion.getQuestion()
-      this.dispatchEvent(new window.CustomEvent('gameStart'))
     }
 
     /**

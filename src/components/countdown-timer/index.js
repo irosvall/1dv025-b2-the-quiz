@@ -56,14 +56,14 @@ customElements.define('countdown-timer',
        *
        * @type {number}
        */
-      this.limit = 20
+      this._limit = 20
 
       /**
        * The time left on the timer.
        *
        * @type {number}
        */
-      this._timeLeft = this.limit
+      this._timeLeft = this._limit
 
       /**
        * The total time a game session has taken.
@@ -111,8 +111,8 @@ customElements.define('countdown-timer',
       // Parse newValue to a number and round it to nearest integer.
       newValue = Math.round(Number(newValue))
       if (Number.isInteger(newValue)) {
-        this.limit = newValue
-        this._timeLeft = this.limit
+        this._limit = newValue
+        this._timeLeft = this._limit
       }
     }
 
@@ -154,7 +154,7 @@ customElements.define('countdown-timer',
      * Resets the timer values to default.
      */
     _resetTimer () {
-      this.limit = 20
+      this._limit = 20
       this._timeLeft = 20
     }
 
@@ -162,6 +162,6 @@ customElements.define('countdown-timer',
      * Add time to the total time that's taken during game session.
      */
     _addTime () {
-      this._totalTime += (this.limit - this._timeLeft)
+      this._totalTime += (this._limit - this._timeLeft)
     }
   })

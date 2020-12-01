@@ -284,7 +284,6 @@ customElements.define('quiz-question',
      */
     async _checkHTTPstatus (res) {
       if (res.status === 400) {
-        console.log(res)
         this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
       } else if (res.status === 200) {
         res = await res.json()
