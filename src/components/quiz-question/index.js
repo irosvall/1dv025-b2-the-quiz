@@ -66,13 +66,6 @@ customElements.define('quiz-question',
         .appendChild(template.content.cloneNode(true))
 
       /**
-       * The quiz application.
-       *
-       * @type {HTMLElement}
-       */
-      this.quizApplication = document.querySelector('quiz-application')
-
-      /**
        * The h2 element for the question to be displayed in.
        *
        * @type {HTMLElement}
@@ -120,6 +113,8 @@ customElements.define('quiz-question',
        * @type {string}
        */
       this._questionURL = 'http://courselab.lnu.se/question/1'
+
+      /* EVENT HANDLERS */
 
       /**
        * Handles submit events for when the user submit radio button answers.
@@ -234,7 +229,7 @@ customElements.define('quiz-question',
     _getRadioButtonAnswer (event) {
       event.preventDefault()
 
-      // Iterates through the properties of the event till the checked answer is found and sends it's value to get the question.
+      // Iterates through the properties of the event till the checked answer is found and sends its value to get the question.
       for (const prop in event.path[0]) {
         try {
           if (event.path[0][prop].checked) {

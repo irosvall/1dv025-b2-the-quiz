@@ -44,7 +44,7 @@ template.innerHTML = `
     <form id="startGameForm">
       <div id="nicknameDiv">
         <label for="nicknameInput">Nickname</label>
-        <input id="nicknameInput" type="text" placeholder="Anonymous" autocomplete="off">
+        <input id="nicknameInput" type="text" placeholder="Anonymous" autocomplete="off" autofocus>
       </div>
       <div id="startGameButton">
         <input type="submit" value="Start game">
@@ -90,15 +90,74 @@ customElements.define('quiz-application',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      /**
+       * The form element for starting the game.
+       *
+       * @type {HTMLElement}
+       */
       this._startGameForm = this.shadowRoot.querySelector('#startGameForm')
+
+      /**
+       * The button element for restarting the game.
+       *
+       * @type {HTMLElement}
+       */
       this._playAgainButton = this.shadowRoot.querySelector('#playAgainButton')
+
+      /**
+       * The countdown-timer element.
+       *
+       * @type {HTMLElement}
+       */
       this._countdownTimer = this.shadowRoot.querySelector('countdown-timer')
+
+      /**
+       * The quiz-question element.
+       *
+       * @type {HTMLElement}
+       */
       this._quizQuestion = this.shadowRoot.querySelector('quiz-question')
+
+      /**
+       * A div element holding the start window content.
+       *
+       * @type {HTMLElement}
+       */
       this._startWindow = this.shadowRoot.querySelector('#startWindow')
+
+      /**
+       * A div element holding the question window content.
+       *
+       * @type {HTMLElement}
+       */
       this._questionWindow = this.shadowRoot.querySelector('#questionWindow')
+
+      /**
+       * A div element holding the congratulations for winning the game window content.
+       *
+       * @type {HTMLElement}
+       */
       this._CongratzWindow = this.shadowRoot.querySelector('#CongratzWindow')
+
+      /**
+       * A div element holding the game over window content.
+       *
+       * @type {HTMLElement}
+       */
       this._gameOverWindow = this.shadowRoot.querySelector('#gameOverWindow')
+
+      /**
+       * The input element to write in a nickname.
+       *
+       * @type {HTMLElement}
+       */
       this._nicknameInput = this.shadowRoot.querySelector('#nicknameInput')
+
+      /**
+       * The high-score element.
+       *
+       * @type {HTMLElement}
+       */
       this._highScore = this.shadowRoot.querySelector('high-score')
 
       /**
@@ -107,6 +166,8 @@ customElements.define('quiz-application',
        * @type {string}
        */
       this.nickname = ''
+
+      /* EVENT HANDLERS */
 
       /**
        * Handles submit events for when the game starts.
@@ -237,6 +298,7 @@ customElements.define('quiz-application',
       window.setTimeout(() => {
         this._gameOverWindow.classList.add('hidden')
         this._startWindow.classList.remove('hidden')
+        this._nicknameInput.focus()
       }, 2000)
     }
 
@@ -258,5 +320,6 @@ customElements.define('quiz-application',
     _startOver () {
       this._CongratzWindow.classList.add('hidden')
       this._startWindow.classList.remove('hidden')
+      this._nicknameInput.focus()
     }
   })

@@ -51,7 +51,11 @@ customElements.define('high-score',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      // Get the tbody element from the shadow root.
+      /**
+       * The tbody element to contain the high scores.
+       *
+       * @type {HTMLElement}
+       */
       this._tbody = this.shadowRoot.querySelector('tbody')
 
       /**
