@@ -177,6 +177,7 @@ customElements.define('quiz-application',
 
       this._startWindow.classList.add('hidden')
       this._questionWindow.classList.remove('hidden')
+      this._quizQuestion.showQuestion()
       this.dispatchEvent(new window.CustomEvent('gameStart'))
     }
 

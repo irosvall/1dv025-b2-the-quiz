@@ -126,9 +126,6 @@ customElements.define('quiz-question',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      this.quizApplication.addEventListener('gameStart', event => {
-        this._fetchQuestions(event)
-      })
       this._radioAnswerForm.addEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
       })
@@ -137,7 +134,7 @@ customElements.define('quiz-question',
         this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
       })
       this.addEventListener('rightAnswer', event => {
-        this._fetchQuestions(event)
+        this.showQuestion(event)
       })
     }
 
@@ -145,9 +142,6 @@ customElements.define('quiz-question',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this.quizApplication.removeEventListener('gameStart', event => {
-        this._fetchQuestions(event)
-      })
       this._radioAnswerForm.removeEventListener('submit', event => {
         this._getRadioButtonAnswer(event)
       })
@@ -156,31 +150,30 @@ customElements.define('quiz-question',
         this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
       })
       this.removeEventListener('rightAnswer', event => {
-        this._fetchQuestions(event)
+        this.showQuestion(event)
       })
     }
 
     /**
-     * Handles gameStart events. Fetches the questions.
-     *
-     * @param {Event} event - The gameStart event.
+     * Fetches the questions and display them with interactive answer forms.
      */
-    async _fetchQuestions (event) {
+    async showQuestion () {
       this._hidePreviousQuestion()
 
       let res
       try {
-        res = await window.fetch(`${this._questionURL}`)
-        res = await res.json()
+        res = await this._fetchQuestion()
       } catch {
         this._question.textContent = 'Problem with the game, come back later.'
-        console.log(Error('Couldn\'t fetch a question'))
-        return
+        console.log(Error('Couldn\'t fetch the question'))
       }
 
       this._answerURL = res.nextURL
+
+      // Displays the question.
       this._question.textContent = `${res.question}`
 
+      // Give radio button answer alternative if the property alternatives exist.
       if (res.alternatives) {
         this._renderRadioAnswerForm(res.alternatives)
       } else {
@@ -189,9 +182,20 @@ customElements.define('quiz-question',
 
       this.dispatchEvent(new window.CustomEvent('loadedQuestion'))
 
+      // Creates an event if the response has a time limit.
       if (res.limit) {
         this.dispatchEvent(new window.CustomEvent('hasLimit', { detail: { limit: `${res.limit}` } }))
       }
+    }
+
+    /**
+     * Fetch question and parse it from JSON.
+     *
+     * @returns {Promise<object>} A Promise from the fetched question that resolves into a JavaScript object.
+     */
+    async _fetchQuestion () {
+      const res = await window.fetch(`${this._questionURL}`)
+      return res.json()
     }
 
     /**
@@ -232,6 +236,7 @@ customElements.define('quiz-question',
             this._fetchAnswer(event, event.path[0][prop].id)
             break
           }
+          // Has to check one button to continue.
         } catch {
           break
         }

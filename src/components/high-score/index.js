@@ -68,7 +68,7 @@ customElements.define('high-score',
     connectedCallback () {
       if (window.localStorage.getItem('quiz-highscore')) {
         this._highScores = JSON.parse(window.localStorage.getItem('quiz-highscore'))
-        this.updateHighScores()
+        this._updateHighScores()
       }
     }
 
@@ -81,7 +81,7 @@ customElements.define('high-score',
       if (typeof value === 'object') {
         if (this._highScores.length === 0) {
           this._highScores.push(value)
-          this.updateHighScores()
+          this._updateHighScores()
           return
         }
         for (const [index, highscore] of this._highScores.entries()) {
@@ -90,11 +90,11 @@ customElements.define('high-score',
             if (this._highScores.length === 6) {
               this._highScores.splice(5, 1)
             }
-            this.updateHighScores()
+            this._updateHighScores()
             break
           } else if (this._highScores.length < 5) {
             this._highScores.push(value)
-            this.updateHighScores()
+            this._updateHighScores()
             break
           }
         }
@@ -104,7 +104,7 @@ customElements.define('high-score',
     /**
      * Updates the local Webb Storage and the rendering.
      */
-    updateHighScores () {
+    _updateHighScores () {
       window.localStorage.setItem('quiz-highscore', JSON.stringify(this._highScores))
       this._renderHighScores()
     }
