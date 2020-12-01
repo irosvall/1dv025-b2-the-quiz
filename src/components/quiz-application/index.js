@@ -107,6 +107,53 @@ customElements.define('quiz-application',
        * @type {string}
        */
       this.nickname = ''
+
+      /**
+       * Handles submit events for when the game starts.
+       *
+       * @param {Event} event - The submit event.
+       */
+      this._handleStartGame = event => {
+        this._startGame(event, this._nicknameInput.value)
+      }
+
+      /**
+       * Handles hasLimit events for when the questions has a timer limit.
+       *
+       * @param {Event} event - The hasLimit event.
+       */
+      this._handleHasLimit = event => {
+        this._countdownTimer.setAttribute('limit', event.detail.limit)
+      }
+
+      /**
+       * Handles wrongAnswer and timeout events, which causes game over.
+       */
+      this._handleGameOver = () => {
+        this._gameOver()
+      }
+
+      /**
+       * Handles loadedQuestion events.
+       */
+      this._handleLoadedQuestion = () => {
+        this._countdownTimer.stopTimer()
+        this._countdownTimer.startTimer()
+      }
+
+      /**
+       * Handles gameWin events.
+       */
+      this._handleGameWin = () => {
+        this._gameWin()
+      }
+
+      /**
+       * Handles click events for when the start over button is pressed.
+       */
+      this.handleStartOver = () => {
+        this._startOver()
+      }
     }
 
     /**
@@ -135,50 +182,27 @@ customElements.define('quiz-application',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      this._startGameForm.addEventListener('submit', (event) => {
-        this._startGame(event, this._nicknameInput.value)
-      })
-      this._quizQuestion.addEventListener('hasLimit', event => {
-        this._countdownTimer.setAttribute('limit', event.detail.limit)
-      })
-      this._quizQuestion.addEventListener('wrongAnswer', event => {
-        this._gameOver()
-      })
-      this._countdownTimer.addEventListener('timeout', event => {
-        this._gameOver()
-      })
-      this._quizQuestion.addEventListener('loadedQuestion', event => {
-        this._countdownTimer.stopTimer()
-        this._countdownTimer.startTimer()
-      })
-      this._quizQuestion.addEventListener('gameWin', event => {
-        this._gameWin()
-      })
-      this._playAgainButton.addEventListener('click', event => {
-        this._startOver()
-      })
+      this._startGameForm.addEventListener('submit', this._handleStartGame)
+      this._quizQuestion.addEventListener('hasLimit', this._handleHasLimit)
+      this._quizQuestion.addEventListener('wrongAnswer', this._handleGameOver)
+      this._countdownTimer.addEventListener('timeout', this._handleGameOver)
+      this._quizQuestion.addEventListener('loadedQuestion', this._handleLoadedQuestion)
+      this._quizQuestion.addEventListener('gameWin', this._handleGameWin)
+      this._playAgainButton.addEventListener('click', this.handleStartOver)
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this._startGameForm.removeEventListener('click', (event) => {
-        this._startGame(event)
-      })
-      this._quizQuestion.removeEventListener('hasLimit', event => {
-        this._countdownTimer.setAttribute('limit', event.detail.limit)
-      })
-      this._quizQuestion.removeEventListener('wrongAnswer', event => {
-        this._gameOver()
-      })
-      this._countdownTimer.removeEventListener('timeout', event => {
-        this._gameOver()
-      })
-      this._quizQuestion.removeEventListener('loadedQuestion', event => {
-        this._countdownTimer.stopTimer()
-        this._countdownTimer.startTimer()
-      })
+      this._startGameForm.removeEventListener('submit', this._handleStartGame)
+      this._quizQuestion.removeEventListener('hasLimit', this._handleHasLimit)
+      this._quizQuestion.removeEventListener('wrongAnswer', this._handleGameOver)
+      this._countdownTimer.removeEventListener('timeout', this._handleGameOver)
+      this._quizQuestion.removeEventListener('loadedQuestion', this._handleLoadedQuestion)
+      this._quizQuestion.removeEventListener('gameWin', this._handleGameWin)
+      this._playAgainButton.removeEventListener('click', this.handleStartOver)
+      this._countdownTimer.stopTimer()
     }
 
     /**
@@ -199,7 +223,7 @@ customElements.define('quiz-application',
 
       this._startWindow.classList.add('hidden')
       this._questionWindow.classList.remove('hidden')
-      this._quizQuestion.showQuestion()
+      this._quizQuestion.getQuestion()
       this.dispatchEvent(new window.CustomEvent('gameStart'))
     }
 

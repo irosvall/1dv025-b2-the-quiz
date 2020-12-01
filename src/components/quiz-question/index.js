@@ -120,44 +120,49 @@ customElements.define('quiz-question',
        * @type {string}
        */
       this._questionURL = 'http://courselab.lnu.se/question/1'
+
+      /**
+       * Handles submit events for when the user submit radio button answers.
+       *
+       * @param {Event} event - The submit event.
+       */
+      this._onRadioButtonSubmit = event => {
+        this._getRadioButtonAnswer(event)
+      }
+
+      /**
+       * Handles submit events for when the user submit text input answers.
+       *
+       * @param {Event} event - The submit event.
+       */
+      this._ontextInputSubmit = event => {
+        event.preventDefault()
+        this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
+      }
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      this._radioAnswerForm.addEventListener('submit', event => {
-        this._getRadioButtonAnswer(event)
-      })
-      this._textAnswerForm.addEventListener('submit', event => {
-        event.preventDefault()
-        this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
-      })
-      this.addEventListener('rightAnswer', event => {
-        this.showQuestion(event)
-      })
+      this._radioAnswerForm.addEventListener('submit', this._onRadioButtonSubmit)
+      this._textAnswerForm.addEventListener('submit', this._ontextInputSubmit)
+      this.addEventListener('rightAnswer', this.getQuestion)
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this._radioAnswerForm.removeEventListener('submit', event => {
-        this._getRadioButtonAnswer(event)
-      })
-      this._textAnswerForm.removeEventListener('submit', event => {
-        event.preventDefault()
-        this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
-      })
-      this.removeEventListener('rightAnswer', event => {
-        this.showQuestion(event)
-      })
+      this._radioAnswerForm.removeEventListener('submit', this._onRadioButtonSubmit)
+      this._textAnswerForm.removeEventListener('submit', this._ontextInputSubmit)
+      this.removeEventListener('rightAnswer', this.getQuestion)
     }
 
     /**
      * Fetches the questions and display them with interactive answer forms.
      */
-    async showQuestion () {
+    async getQuestion () {
       this._hidePreviousQuestion()
 
       let res
