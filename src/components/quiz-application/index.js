@@ -106,7 +106,29 @@ customElements.define('quiz-application',
        *
        * @type {string}
        */
-      this._nickname = 'Anonymous'
+      this.nickname = ''
+    }
+
+    /**
+     * Get the nickname.
+     *
+     * @returns {string} The nickname.
+     */
+    get nickname () {
+      return this._nickname
+    }
+
+    /**
+     * Validates and sets the nickname.
+     *
+     * @param {string} nickname - The nickname.
+     */
+    set nickname (nickname) {
+      if (nickname !== '') {
+        this._nickname = nickname
+      } else {
+        this._nickname = 'Anonymous'
+      }
     }
 
     /**
@@ -167,7 +189,7 @@ customElements.define('quiz-application',
      */
     _startGame (event, nickname) {
       event.preventDefault()
-      this._nickname = nickname
+      this.nickname = nickname
 
       // Makes the quiz always start at the first question.
       this._quizQuestion.resetQuestions()
