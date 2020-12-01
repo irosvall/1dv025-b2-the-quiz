@@ -73,11 +73,11 @@ customElements.define('high-score',
     }
 
     /**
-     * Sets the highscore.
+     * Check if the new score gets on the high score and if so update the high score list and render.
      *
      * @param {{name: string, score: number}} value - The score.
      */
-    set highScore (value) {
+    newScore (value) {
       if (typeof value === 'object') {
         if (this._highScores.length === 0) {
           this._highScores.push(value)
@@ -90,6 +90,10 @@ customElements.define('high-score',
             if (this._highScores.length === 6) {
               this._highScores.splice(5, 1)
             }
+            this.updateHighScores()
+            break
+          } else if (this._highScores.length < 5) {
+            this._highScores.push(value)
             this.updateHighScores()
             break
           }

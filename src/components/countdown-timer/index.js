@@ -20,7 +20,7 @@ template.innerHTML = `
     }
   </style>
 
-  <time datetime=""></time>  
+  <time></time>  
 `
 /**
  * Define custom element.

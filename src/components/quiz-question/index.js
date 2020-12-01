@@ -168,8 +168,15 @@ customElements.define('quiz-question',
     async _fetchQuestions (event) {
       this._hidePreviousQuestion()
 
-      let res = await window.fetch(`${this._questionURL}`)
-      res = await res.json()
+      let res
+      try {
+        res = await window.fetch(`${this._questionURL}`)
+        res = await res.json()
+      } catch {
+        this._question.textContent = 'Problem with the game, come back later.'
+        console.log(Error('Couldn\'t fetch a question'))
+        return
+      }
 
       this._answerURL = res.nextURL
       this._question.textContent = `${res.question}`
@@ -193,7 +200,7 @@ customElements.define('quiz-question',
      * @param {object} alternatives - The answer options.
      */
     _renderRadioAnswerForm (alternatives) {
-      this._radioButtons.innerHTML = ''
+      this._radioButtons.textContent = ''
       const fragment = document.createDocumentFragment()
 
       for (const alt in alternatives) {
@@ -220,8 +227,12 @@ customElements.define('quiz-question',
 
       // Iterates through the properties of the event till the checked answer is found and sends it's value to get the question.
       for (const prop in event.path[0]) {
-        if (event.path[0][prop].checked) {
-          this._fetchAnswer(event, event.path[0][prop].id)
+        try {
+          if (event.path[0][prop].checked) {
+            this._fetchAnswer(event, event.path[0][prop].id)
+            break
+          }
+        } catch {
           break
         }
       }
@@ -244,14 +255,20 @@ customElements.define('quiz-question',
      */
     async _fetchAnswer (event, answer) {
       const jsonAnswer = JSON.stringify({ answer: `${answer}` })
-      const res = await window.fetch(`${this._answerURL}`, {
-        method: 'post',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: `${jsonAnswer}`
-      })
-
+      let res
+      try {
+        res = await window.fetch(`${this._answerURL}`, {
+          method: 'post',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: `${jsonAnswer}`
+        })
+      } catch {
+        this._question.textContent = 'Problem with the game, come back later.'
+        console.log(Error('Couldn\'t fetch the answer'))
+        return
+      }
       this._checkHTTPstatus(res)
     }
 
@@ -262,6 +279,7 @@ customElements.define('quiz-question',
      */
     async _checkHTTPstatus (res) {
       if (res.status === 400) {
+        console.log(res)
         this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
       } else if (res.status === 200) {
         res = await res.json()

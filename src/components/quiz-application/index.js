@@ -199,7 +199,7 @@ customElements.define('quiz-application',
     _gameWin () {
       this._countdownTimer.stopTimer()
       const totalTime = this._countdownTimer.totalTime
-      this._highScore.highScore = { name: this._nickname, score: totalTime }
+      this._highScore.newScore({ name: this._nickname, score: totalTime })
       this.shadowRoot.querySelector('#CongratzWindow p').textContent = `Time/Score: ${totalTime}s`
       this._questionWindow.classList.add('hidden')
       this._CongratzWindow.classList.remove('hidden')
