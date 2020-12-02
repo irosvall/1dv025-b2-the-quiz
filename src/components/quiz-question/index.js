@@ -287,12 +287,15 @@ customElements.define('quiz-question',
         this.dispatchEvent(new window.CustomEvent('wrongAnswer'))
       } else if (res.status === 200) {
         res = await res.json()
-        // Finds the new question.
-        this._questionURL = res.nextURL
-        this.dispatchEvent(new window.CustomEvent('rightAnswer'))
-        // Needs to be changed!
+        // Finds the next question. If it doesn't exist player wins.
+        if (res.nextURL) {
+          this._questionURL = res.nextURL
+          this.dispatchEvent(new window.CustomEvent('rightAnswer'))
+        } else {
+          this.dispatchEvent(new window.CustomEvent('gameWin'))
+        }
       } else if (res.status === 500) {
-        this.dispatchEvent(new window.CustomEvent('gameWin'))
+        this._question.textContent = 'Problem with the game, come back later.'
       }
     }
 
