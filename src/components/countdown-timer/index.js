@@ -12,11 +12,17 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      background-color: lightblue;
-      display: inline-block;
-      font-size: 1.5em;
+      background-color: rgb(211, 229, 233, 0.705);
+      display: block;
+      width: fit-content;
+      font-size: 2em;
       font-weight: 1000;
-      padding: 0.5em 1.4em;
+      padding: 0.2em 1em;
+      text-align: right;
+      margin-left: auto;
+    }
+    time {
+      margin: 0 auto;
     }
   </style>
 

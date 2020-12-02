@@ -52,23 +52,30 @@ template.innerHTML = `
       font-size: 1.25em;
       padding-bottom: 0.2em;
     }
-    #startGameForm input {
+    #startGameForm input, #playAgainButton {
       display: block;
       font-size: 1.25em;
       margin: 0 auto;
+      padding: 0.2em 0.3em;
     }
-    #startGameButton input {
+    #startGameButton input, #playAgainButton {
       cursor: pointer;
       background-color: rgb(252, 230, 217);
       margin-top: 2em;
       padding: 0.5em 1em;
+    }
+    #CongratzWindow p {
+      margin-top: 3em;
+      margin-bottom: 0;
+      text-align: center;
+      font-size: 1.7em;
     }
     h2 {
       color: rgb(46, 45, 60);
       font-size: 2em;
     }
     p {
-      font-size: 1.1em;
+      font-size: 1.15em;
       line-height: 1.5em;
     }
   </style>

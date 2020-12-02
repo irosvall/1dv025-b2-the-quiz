@@ -13,16 +13,62 @@ template.innerHTML = `
   <style>
     :host {
       display: block;
+      height: 100%;
+      position: relative; 
     }
     .hidden {
       display: none;
     }
+    #radioButtons {
+      margin-left: 1.5em;
+      display: flex;
+      flex-flow: column wrap;
+    }
     #radioButtons label {
       display: block;
+      width: max-content;
       padding: 0.5em;
+      font-size: 1.3em;
+    }
+    #radioButtons label input {
+      width: 18px;
+      height: 18px;
+      margin: 0 6px -8px 6px;
+    }
+    #submitRadioAnswer input {
+      cursor: pointer;
+      background-color: rgb(252, 230, 217);
+      font-size: 1.3em;
+      padding: 0.4em 0.8em;
+      border-radius: 0.5em;
+      display: block;
+      position: absolute;
+      bottom: 3em;
+      left: 45%;
+    }
+    #textAnswerForm {
+      text-align: center;
     }
     #textInput, #submitTextAnswer {
       display: inline-block;
+      margin-top: 2em;
+    }
+    #textAnswerForm input {
+      font-size: 1.25em;
+      padding: 0.2em 0.3em;
+    }
+    #submitTextAnswer input {
+      cursor: pointer;
+      background-color: rgb(252, 230, 217);
+      margin-left: 0.3em;
+      border-radius: 0.5em;
+      padding: 0.3em 0.5em;
+    }
+    h2 {
+      margin-top: 0;
+      color: rgb(46, 45, 60);
+      font-size: 2em;
+      text-align: center;
     }
   </style>
 
