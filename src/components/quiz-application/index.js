@@ -16,10 +16,18 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {  
+      margin: 2em;
       display: grid;
       grid-template-columns: 1.8fr 1fr;
       gap: 4em;
-      margin: 2em;
+      grid-template-areas: 
+        "gridleft gridright";
+    }
+    .gridleft {
+      grid-area: gridleft;
+    }
+    .gridright {
+      grid-area: gridright;
     }
     .wrapper {
       background-color: white;
@@ -36,14 +44,41 @@ template.innerHTML = `
       transition: background-color 2s ease;
       background-color: red;
     }
+    #startGameForm {
+      text-align: center;
+    }
+    #startGameForm label {
+      display: inline-block;
+      font-size: 1.25em;
+      padding-bottom: 0.2em;
+    }
+    #startGameForm input {
+      display: block;
+      font-size: 1.25em;
+      margin: 0 auto;
+    }
+    #startGameButton input {
+      cursor: pointer;
+      background-color: rgb(252, 230, 217);
+      margin-top: 2em;
+      padding: 0.5em 1em;
+    }
+    h2 {
+      color: rgb(46, 45, 60);
+      font-size: 2em;
+    }
+    p {
+      font-size: 1.1em;
+      line-height: 1.5em;
+    }
   </style>
 
-  <div class="wrapper" id="startWindow">
-    <h2>Instruction</h2>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat totam sed distinctio? Officia reiciendis repellat necessitatibus animi ipsa in natus, harum ex optio cumque, expedita corporis quia accusamus perspiciatis facilis?</p>
+  <div class="gridleft wrapper" id="startWindow">
+    <h2>Instructions</h2>
+    <p>To win this quiz you need to answer all questions correctly. The questions are either answered with text or you will be displayed with several options where only one alternative is correct. The questions are timed and if the time runs out or you answer one question wrong you loose the quiz. If you win the quiz you have a chance to be displayed on the high score board. The less time taken during the quiz the better standing you will have.</p>
     <form id="startGameForm">
       <div id="nicknameDiv">
-        <label for="nicknameInput">Nickname</label>
+        <label for="nicknameInput">Nickname:</label>
         <input id="nicknameInput" type="text" placeholder="Anonymous" autocomplete="off" autofocus>
       </div>
       <div id="startGameButton">
@@ -51,19 +86,19 @@ template.innerHTML = `
       </div>
     </form>
   </div>
-  <div class="wrapper hidden" id="questionWindow">
+  <div class="gridleft wrapper hidden" id="questionWindow">
     <countdown-timer></countdown-timer>
     <quiz-question></quiz-question>
   </div>
-  <div class="wrapper hidden" id="CongratzWindow">
+  <div class="gridleft wrapper hidden" id="CongratzWindow">
     <h2>Congratulations you completed the quiz!</h2>
     <p></p>
     <button id="playAgainButton" type="button">Play again</button>
   </div>
-  <div class="wrapper hidden" id="gameOverWindow">
+  <div class="gridleft wrapper hidden" id="gameOverWindow">
     <h2>Game Over</h2>
   </div>
-  <div class="wrapper" id="highScoreWindow">
+  <div class="gridright wrapper" id="highScoreWindow">
     <high-score></high-score>
   </div>  
 `

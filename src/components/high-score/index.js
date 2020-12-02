@@ -15,6 +15,27 @@ template.innerHTML = `
       display: block;
       background-color: white;
     }
+    h2 {
+      color: rgb(46, 45, 60);
+      font-size: 2em;
+      text-align: center;
+    }
+    table {
+      margin: 0 auto;
+      width: 330px;
+      max-width: 100%;
+      border-collapse: collapse;
+    }
+    table th {
+      color: rgb(26, 25, 40);
+      font-size: 1.3em;
+      text-align: left;
+      border-bottom: solid 1px rgb(56, 55, 80);
+    }
+    table td {
+      font-size: 1.2em;
+      padding-top: 1em;
+    }
   </style>
 
   <h2>High Score</h2>
