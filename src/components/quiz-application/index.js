@@ -23,6 +23,14 @@ template.innerHTML = `
       grid-template-areas: 
         "gridleft gridright";
     }
+    h2 {
+      color: rgb(46, 45, 60);
+      font-size: 2em;
+    }
+    p {
+      font-size: 1.15em;
+      line-height: 1.5em;
+    }
     .gridleft {
       grid-area: gridleft;
     }
@@ -39,10 +47,6 @@ template.innerHTML = `
     }
     .hidden {
       display: none;
-    }
-    #gameOverWindow {
-      transition: background-color 2s ease;
-      background-color: red;
     }
     #startGameForm {
       text-align: center;
@@ -70,14 +74,44 @@ template.innerHTML = `
       text-align: center;
       font-size: 1.7em;
     }
-    h2 {
-      color: rgb(46, 45, 60);
-      font-size: 2em;
+    .gameOverAnimation {
+      animation-name: gameOver;
+      animation-duration: 2.3s;
+      animation-timing-function: cubic-bezier(.02,.39,.67,.9);
+      animation-fill-mode: forwards;
     }
-    p {
-      font-size: 1.15em;
-      line-height: 1.5em;
+    .gameOverAnimationText {
+      animation-name: gameOverText;
+      animation-duration: 2s;
+      animation-timing-function: cubic-bezier(0,.32,.45,.99);
+      animation-fill-mode: forwards;
     }
+    #gameOverWindow h2 {
+      margin-top: 2em;
+      color: red;
+      font-size: 6em;
+      margin-bottom: 0;
+      text-align: center;
+    }
+    @keyframes gameOverText {
+      from {
+        color: white;
+        font-size: 0;
+      }
+      to {
+        color: red;
+        font-size: 6em;
+      }
+    }
+    @keyframes gameOver {
+      from {
+        background-color: red;
+      }
+      to {
+        background-color: white;
+      }
+    }
+    
   </style>
 
   <div class="gridleft wrapper" id="startWindow">
@@ -335,12 +369,20 @@ customElements.define('quiz-application',
     _gameOver () {
       this._countdownTimer.stopTimer()
       this._questionWindow.classList.add('hidden')
+
+      // Add animations.
+      this._gameOverWindow.classList.add('gameOverAnimation')
+      const h2 = this.shadowRoot.querySelector('#gameOverWindow h2')
+      h2.classList.add('gameOverAnimationText')
+
       this._gameOverWindow.classList.remove('hidden')
       window.setTimeout(() => {
         this._gameOverWindow.classList.add('hidden')
+        this._gameOverWindow.classList.remove('gameOverAnimation')
+        h2.classList.remove('gameOverAnimationText')
         this._startWindow.classList.remove('hidden')
         this._nicknameInput.focus()
-      }, 2000)
+      }, 2500)
     }
 
     /**
