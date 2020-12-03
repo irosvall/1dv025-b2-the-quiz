@@ -68,7 +68,7 @@ template.innerHTML = `
       margin-top: 2em;
       padding: 0.5em 1em;
     }
-    #CongratzWindow p {
+    #congratzWindow p {
       margin-top: 3em;
       margin-bottom: 0;
       text-align: center;
@@ -114,7 +114,7 @@ template.innerHTML = `
     
   </style>
 
-  <div class="gridleft wrapper" id="startWindow">
+  <div part="startWindow" class="gridleft wrapper" id="startWindow">
     <h2>Instructions</h2>
     <p>To win this quiz you need to answer all questions correctly. The questions are either answered with text or you will be displayed with several options where only one alternative is correct. The questions are timed and if the time runs out or you answer one question wrong you loose the quiz. If you win the quiz you have a chance to be displayed on the high score board. The less time taken during the quiz the better standing you will have.</p>
     <form id="startGameForm">
@@ -127,20 +127,20 @@ template.innerHTML = `
       </div>
     </form>
   </div>
-  <div class="gridleft wrapper hidden" id="questionWindow">
-    <countdown-timer></countdown-timer>
-    <quiz-question></quiz-question>
+  <div part="questionWindow" class="gridleft wrapper hidden" id="questionWindow">
+    <countdown-timer part="countdown-timer"></countdown-timer>
+    <quiz-question part="quiz-question"></quiz-question>
   </div>
-  <div class="gridleft wrapper hidden" id="CongratzWindow">
+  <div part="congratzWindow" class="gridleft wrapper hidden" id="congratzWindow">
     <h2>Congratulations you completed the quiz!</h2>
     <p></p>
     <button id="playAgainButton" type="button">Play again</button>
   </div>
-  <div class="gridleft wrapper hidden" id="gameOverWindow">
+  <div part="gameOverWindow" class="gridleft wrapper hidden" id="gameOverWindow">
     <h2>Game Over</h2>
   </div>
-  <div class="gridright wrapper" id="highScoreWindow">
-    <high-score></high-score>
+  <div part="highScoreWindow" class="gridright wrapper" id="highScoreWindow">
+    <high-score part="high-score"></high-score>
   </div>  
 `
 
@@ -213,7 +213,7 @@ customElements.define('quiz-application',
        *
        * @type {HTMLElement}
        */
-      this._CongratzWindow = this.shadowRoot.querySelector('#CongratzWindow')
+      this._congratzWindow = this.shadowRoot.querySelector('#congratzWindow')
 
       /**
        * A div element holding the game over window content.
@@ -395,9 +395,9 @@ customElements.define('quiz-application',
       this._countdownTimer.stopTimer()
       const totalTime = this._countdownTimer.totalTime
       this._highScore.newScore({ name: this._nickname, score: totalTime })
-      this.shadowRoot.querySelector('#CongratzWindow p').textContent = `Time/Score: ${totalTime}s`
+      this.shadowRoot.querySelector('#congratzWindow p').textContent = `Time/Score: ${totalTime}s`
       this._questionWindow.classList.add('hidden')
-      this._CongratzWindow.classList.remove('hidden')
+      this._congratzWindow.classList.remove('hidden')
     }
 
     /**
@@ -405,7 +405,7 @@ customElements.define('quiz-application',
      * Takes user back to start window.
      */
     _startOver () {
-      this._CongratzWindow.classList.add('hidden')
+      this._congratzWindow.classList.add('hidden')
       this._startWindow.classList.remove('hidden')
       this._nicknameInput.focus()
     }

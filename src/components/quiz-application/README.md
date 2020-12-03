@@ -32,6 +32,24 @@ Parameters: `{string} nickname` - The nickname
 
 Returns: Undefined
 
+## Styling with CSS
+
+The startWindow element (div) is styleable using the part `startWindow`.
+
+The questionWindow element (div) is styleable using the part `questionWindow`.
+
+The congratzWindow element (div) is styleable using the part `congratzWindow`.
+
+The gameOverWindow element (div) is styleable using the part `gameOverWindow`.
+
+The highScoreWindow element (div) is styleable using the part `highScoreWindow`.
+
+The countdown-timer custom element is styleable using the part `countdown-timer`
+
+The quiz-question custom element is styleable using the part `quiz-question`
+
+The high-score custom element is styleable using the part `high-score`
+
 ## Example
 ```html
    <quiz-application></quiz-application>

@@ -103,7 +103,6 @@ customElements.define('high-score',
      * @param {{name: string, score: number}} value - The score.
      */
     newScore (value) {
-      debugger
       if (typeof value === 'object') {
         // If no high scores, push the score instantly to the high score list.
         if (this._highScores.length === 0) {
