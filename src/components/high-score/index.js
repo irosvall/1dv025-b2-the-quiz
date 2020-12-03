@@ -103,12 +103,15 @@ customElements.define('high-score',
      * @param {{name: string, score: number}} value - The score.
      */
     newScore (value) {
+      debugger
       if (typeof value === 'object') {
+        // If no high scores, push the score instantly to the high score list.
         if (this._highScores.length === 0) {
           this._highScores.push(value)
           this._updateHighScores()
           return
         }
+        // If score better than a highscore splice it in and take away worst highscore to keep to maximum 5 scores.
         for (const [index, highscore] of this._highScores.entries()) {
           if (value.score <= highscore.score) {
             this._highScores.splice(index, 0, value)
@@ -116,12 +119,13 @@ customElements.define('high-score',
               this._highScores.splice(5, 1)
             }
             this._updateHighScores()
-            break
-          } else if (this._highScores.length < 5) {
-            this._highScores.push(value)
-            this._updateHighScores()
-            break
+            return
           }
+        }
+        // If score isn't better than any high score, but list is under 5 scores, push it last to the list.
+        if (this._highScores.length < 5) {
+          this._highScores.push(value)
+          this._updateHighScores()
         }
       }
     }

@@ -178,7 +178,7 @@ customElements.define('quiz-question',
        */
       this._ontextInputSubmit = event => {
         event.preventDefault()
-        this._fetchAnswer(event, `${this._textAnswerinput.value}`.toLowerCase())
+        this._fetchAnswer(`${this._textAnswerinput.value}`.toLowerCase())
       }
     }
 
@@ -202,6 +202,7 @@ customElements.define('quiz-question',
 
     /**
      * Fetches the questions and display them with interactive answer forms.
+     * Handles rightAnswer events for when the user answer correct and needs another question.
      */
     async getQuestion () {
       this._hidePreviousQuestion()
@@ -268,18 +269,18 @@ customElements.define('quiz-question',
     }
 
     /**
-     * Handles submit events for answered radio button questions.
+     * Runs when submit events for when the user submit radio button answers occurs.
+     * It iterates through the properties of the event till the checked answer is found and sends its value to get the question.
      *
      * @param {Event} event - The submit event.
      */
     _getRadioButtonAnswer (event) {
       event.preventDefault()
 
-      // Iterates through the properties of the event till the checked answer is found and sends its value to get the question.
       for (const prop in event.path[0]) {
         try {
           if (event.path[0][prop].checked) {
-            this._fetchAnswer(event, event.path[0][prop].id)
+            this._fetchAnswer(event.path[0][prop].id)
             break
           }
           // Has to check one button to continue.
@@ -299,12 +300,12 @@ customElements.define('quiz-question',
     }
 
     /**
-     * Handles submit events for answered questions. Fetches the answers.
+     * Runs when submit events for answered questions occurs.
+     * Fetches the answers.
      *
-     * @param {Event} event - The submit event.
      * @param {string} answer - The answer.
      */
-    async _fetchAnswer (event, answer) {
+    async _fetchAnswer (answer) {
       const jsonAnswer = JSON.stringify({ answer: `${answer}` })
       let res
       try {
@@ -324,7 +325,7 @@ customElements.define('quiz-question',
     }
 
     /**
-     * Check the HTTP Response status to see the user's preogress through the game.
+     * Check the HTTP Response status to see the user's progress through the game.
      *
      * @param {JSON} res - The HTTP Response.
      */

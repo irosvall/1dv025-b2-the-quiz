@@ -343,7 +343,8 @@ customElements.define('quiz-application',
     }
 
     /**
-     * Handles submit events for starting the game.
+     * Runs when submit events for starting the game occurs.
+     * It adds nickanme, resets timer and questions, and starts the quiz.
      *
      * @param {Event} event - The submit event.
      * @param {string} nickname - The user's nickname.
@@ -364,7 +365,8 @@ customElements.define('quiz-application',
     }
 
     /**
-     * Handles events for when the user fails the quiz.
+     * Runs when events for when the user fails the quiz occurs.
+     * Render the game over animations and takes user back to the start window.
      */
     _gameOver () {
       this._countdownTimer.stopTimer()
@@ -386,7 +388,8 @@ customElements.define('quiz-application',
     }
 
     /**
-     * Handles events for when the user finnishes the quiz.
+     * Runs when events for when the user finnishes the quiz occurs.
+     * Displays and sends the user's nickname and score to the high-score element to handle.
      */
     _gameWin () {
       this._countdownTimer.stopTimer()
@@ -398,7 +401,8 @@ customElements.define('quiz-application',
     }
 
     /**
-     * Handles events for when the user clicks the play again button.
+     * Runs when events for when the user clicks the play again button occurs.
+     * Takes user back to start window.
      */
     _startOver () {
       this._CongratzWindow.classList.add('hidden')
