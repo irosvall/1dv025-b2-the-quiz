@@ -1,5 +1,9 @@
 # The quiz
 
+This application was a project I made as a part of my studies at Linnaeus University, completed 2020-12-04.
+
+## The assignment description
+
 ## Introduction
 
 In this assignment, you will use asynchronous communication to create a quiz application. All questions are served to your application using HTTP in a [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) way, and your application should send the users answers back to the server for validation.
